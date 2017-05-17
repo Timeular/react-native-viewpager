@@ -43,6 +43,7 @@ var ViewPager = React.createClass({
     animation: PropTypes.func,
     initialPage: PropTypes.number,
     panXThreshold: PropTypes.number,
+    nextPageVXThreshold: PropTypes.number,
   },
 
   fling: false,
@@ -67,7 +68,8 @@ var ViewPager = React.createClass({
       currentPage: 0,
       viewWidth: 0,
       scrollValue: new Animated.Value(0),
-      panXThreshold: 0
+      panXThreshold: 0,
+      nextPageVXThreshold: 1e-6
     };
   },
 
@@ -80,9 +82,9 @@ var ViewPager = React.createClass({
           vx = gestureState.vx;
 
       var step = 0;
-      if (relativeGestureDistance < -0.5 || (relativeGestureDistance < 0 && vx <= -1e-6)) {
+      if (relativeGestureDistance < -0.5 || (relativeGestureDistance < 0 && vx <= -this.props.nextPageVXThreshold)) {
         step = 1;
-      } else if (relativeGestureDistance > 0.5 || (relativeGestureDistance > 0 && vx >= 1e-6)) {
+      } else if (relativeGestureDistance > 0.5 || (relativeGestureDistance > 0 && vx >= this.props.nextPageVXThreshold)) {
         step = -1;
       }
 
