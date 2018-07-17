@@ -1,13 +1,14 @@
 'use strict';
 
 var React = require('react');
-var { PropTypes } = React;
+var PropTypes = require('prop-types');
 
 var ReactNative = require('react-native');
 var {
   Dimensions,
   Text,
   View,
+  ViewPropTypes,
   TouchableOpacity,
   PanResponder,
   Animated,
@@ -29,7 +30,7 @@ var ViewPager = React.createClass({
   },
 
   propTypes: {
-    ...View.propTypes,
+    ...ViewPropTypes.propTypes,
     dataSource: PropTypes.instanceOf(ViewPagerDataSource).isRequired,
     renderPage: PropTypes.func.isRequired,
     onChangePage: PropTypes.func,
