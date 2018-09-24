@@ -44,6 +44,8 @@ var ViewPager = createReactClass({
     autoPlay: PropTypes.bool,
     animation: PropTypes.func,
     initialPage: PropTypes.number,
+    panXThreshold: PropTypes.number,
+    nextPageVXThreshold: PropTypes.number,
   },
 
   fling: false,
@@ -67,7 +69,9 @@ var ViewPager = createReactClass({
     return {
       currentPage: 0,
       viewWidth: 0,
-      scrollValue: new Animated.Value(0)
+      scrollValue: new Animated.Value(0),
+      panXThreshold: 0,
+      nextPageVXThreshold: 1e-6
     };
   },
 
@@ -80,9 +84,9 @@ var ViewPager = createReactClass({
           vx = gestureState.vx;
 
       var step = 0;
-      if (relativeGestureDistance < -0.5 || (relativeGestureDistance < 0 && vx <= -1e-6)) {
+      if (relativeGestureDistance < -0.5 || (relativeGestureDistance < 0 && vx <= -this.props.nextPageVXThreshold)) {
         step = 1;
-      } else if (relativeGestureDistance > 0.5 || (relativeGestureDistance > 0 && vx >= 1e-6)) {
+      } else if (relativeGestureDistance > 0.5 || (relativeGestureDistance > 0 && vx >= this.props.nextPageVXThreshold)) {
         step = -1;
       }
 
@@ -94,7 +98,7 @@ var ViewPager = createReactClass({
     this._panResponder = PanResponder.create({
       // Claim responder if it's a horizontal pan
       onMoveShouldSetPanResponder: (e, gestureState) => {
-        if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) {
+        if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && Math.abs(gestureState.dx) > this.props.panXThreshold) {
           if (/* (gestureState.moveX <= this.props.edgeHitWidth ||
               gestureState.moveX >= deviceWidth - this.props.edgeHitWidth) && */
                 this.props.locked !== true && !this.fling) {
